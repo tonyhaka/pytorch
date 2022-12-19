@@ -7,6 +7,7 @@
 
 #include <ATen/core/Tensor.h>
 #include <ATen/Dispatch.h>
+#include <ATen/OpMathType.h>
 #include <ATen/cpu/vec/vec.h>
 #include <ATen/cpu/vec/functional.h>
 #include <ATen/native/cpu/utils.h>
@@ -52,7 +53,7 @@ void GroupNormKernelImplInternal(
   const bool beta_null = beta_data == nullptr;
   const int64_t inner_size = D * HxW;
 
-  using T_ACC = vec::vec_scalar_t<T>;
+  using T_ACC = at::opmath_type<T>;
 
   at::parallel_for(0, N * G, 1, [&](int64_t start, int64_t end) {
     for (const auto i : c10::irange(start, end)) {
@@ -182,7 +183,7 @@ void GroupNormKernelImplChannelsLastInternal(
   T* mean_data = mean.data_ptr<T>();
   T* rstd_data = rstd.data_ptr<T>();
 
-  using T_ACC = vec::vec_scalar_t<T>;
+  using T_ACC = at::opmath_type<T>;
   using Vec = vec::Vectorized<T_ACC>;
 
   const T s = T_ACC(1) / static_cast<T_ACC>(D * HxW);
