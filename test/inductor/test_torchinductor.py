@@ -3690,6 +3690,33 @@ class CommonTemplate:
             ),
         )
 
+    def test_single_elem(self):
+        def fn(a):
+            b = a + 1
+            return (b,)
+
+        self.common(fn, (torch.randn(1),))
+
+    def test_single_elem_indirect(self):
+        def fn(a, b):
+            c = a[b] + 1
+            return (c,)
+
+        self.common(
+            fn,
+            (
+                torch.randn(
+                    1,
+                ),
+                torch.tensor(
+                    [
+                        0,
+                    ],
+                    dtype=torch.int64,
+                ),
+            ),
+        )
+
     @unittest.skipIf(not has_torchvision_roi_align(), "requires torchvision")
     def test_roi_align(self):
         def fn(a, b):
