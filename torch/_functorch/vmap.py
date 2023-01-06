@@ -210,8 +210,7 @@ def lazy_load_decompositions():
         return
     DECOMPOSITIONS_LOADED = True
 
-    if not (os.environ.get("PYTORCH_JIT", "1" if sys.version_info < (3, 11) else "0") == "1" and
-            __debug__):
+    if os.environ.get("PYTORCH_JIT", "1") != "1" or __debug__:
         return
     # use an alternate way to register an operator into the decomposition table
     # _register_jit_decomposition doesn't work for some operators, e.g. addr,

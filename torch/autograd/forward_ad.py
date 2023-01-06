@@ -87,9 +87,7 @@ def make_dual(tensor, tangent, *, level=None):
     #         buffer = z
     #     return min - torch.log1p(z), buffer
     #     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ <--- HERE
-    # Currently broken for 3.11, see https://github.com/pytorch/pytorch/issues/85506
-    if (os.environ.get("PYTORCH_JIT", "1" if sys.version_info < (3, 11) else "0") == "1" and
-            __debug__):
+    if os.environ.get("PYTORCH_JIT", "1") == "1" and not __debug__:
         from torch._decomp import decompositions_for_jvp  # noqa: F401
 
     if level is None:
